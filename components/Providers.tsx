@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { UTENTI, type Utente } from "@/lib/utenti";
 import { track as trackRaw, type NomeEvento } from "@/lib/track";
 import { LEZIONI } from "@/lib/percorso";
+import type { VariantePartner } from "@/lib/partner";
 import { Overlay } from "@/components/Overlay";
 
 // Avanzamento di un utente nel percorso. Resta nel browser (localStorage),
@@ -25,13 +26,15 @@ type Ctx = {
   completaLezione: (indice: number) => void;
   completaQuiz: (kiwi: number) => void;
   impostaProgresso: (p: Progresso) => void;
+  variantePartner: VariantePartner;
+  setVariantePartner: (v: VariantePartner) => void;
   track: (event: NomeEvento, properties?: Record<string, string | number>) => void;
   toast: (testo: string) => void;
 };
 
 const UtenteContext = createContext<Ctx | null>(null);
 
-type Salvato = { utenteId: string; progressi: Record<string, Progresso> };
+type Salvato = { utenteId: string; progressi: Record<string, Progresso>; variantePartner?: VariantePartner };
 
 function leggi(): Salvato | null {
   try {
@@ -45,6 +48,7 @@ function leggi(): Salvato | null {
 export function Providers({ children }: { children: React.ReactNode }) {
   const [utenteId, setUtenteId] = useState(UTENTI[0].id);
   const [progressi, setProgressi] = useState<Record<string, Progresso>>({});
+  const [variantePartner, setVariantePartner] = useState<VariantePartner>("dopo");
   const [messaggio, setMessaggio] = useState<string | null>(null);
   const [caricato, setCaricato] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -55,6 +59,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (s && UTENTI.some((u) => u.id === s.utenteId)) setUtenteId(s.utenteId);
     if (s) setProgressi(s.progressi ?? {});
+    if (s?.variantePartner === "prima" || s?.variantePartner === "dopo") setVariantePartner(s.variantePartner);
     setCaricato(true);
   }, []);
 
@@ -62,9 +67,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!caricato) return;
     try {
-      localStorage.setItem(STORAGE, JSON.stringify({ utenteId, progressi } satisfies Salvato));
+      localStorage.setItem(STORAGE, JSON.stringify({ utenteId, progressi, variantePartner } satisfies Salvato));
     } catch {}
-  }, [caricato, utenteId, progressi]);
+  }, [caricato, utenteId, progressi, variantePartner]);
 
   const utente = UTENTI.find((u) => u.id === utenteId) ?? UTENTI[0];
   const progresso = progressi[utente.id] ?? VUOTO;
@@ -115,7 +120,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <UtenteContext.Provider
-      value={{ utente, setUtente, progresso, kiwi, completaLezione, completaQuiz, impostaProgresso, track, toast }}
+      value={{
+        utente,
+        setUtente,
+        progresso,
+        kiwi,
+        completaLezione,
+        completaQuiz,
+        impostaProgresso,
+        variantePartner,
+        setVariantePartner,
+        track,
+        toast,
+      }}
     >
       {children}
       {messaggio && (

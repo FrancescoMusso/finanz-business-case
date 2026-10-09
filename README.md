@@ -19,8 +19,8 @@ Il prototipo riproduce l'app Finanz: Home, Academy, mappa del percorso "Assicura
 | Ultima card di ogni lezione, bottone "Continua" | `Lesson Completed` (`lesson_number`) |
 | Ultima domanda del quiz finale | `Quiz Completed` (`quiz_score`: risposte giuste al primo tentativo) |
 | Schermata "Percorso completato" | `Path Completed` |
-| Schermata "Trova la tua polizza" | `Partner Screen Viewed` |
-| Bottone "Confronta le polizze" | `Partner CTA Clicked` |
+| Schermata "Trova la tua polizza" | `Partner Screen Viewed` (`variante`: `prima` o `dopo`) |
+| Bottone "Confronta le polizze" | `Partner CTA Clicked` (`variante`: `prima` o `dopo`) |
 | Modulo inviato sul sito del partner | `Quote Requested` (nella realtà è un postback del partner) |
 
 `Policy Activated` arriva dal partner giorni dopo, quindi qui non c'è.
@@ -38,12 +38,24 @@ app/comparatore/page.tsx         sito del partner (simulato)
 components/Schede.tsx            le card delle lezioni
 components/ui.tsx                chrome, bottoni, bottom sheet, barra in basso
 lib/percorso.ts                  testi di lezioni e quiz
+lib/partner.ts                   contenuti della schermata partner e campi del modulo del comparatore
 lib/navigazione.ts               cronologia card per card (tasto indietro)
 lib/utenti.ts                    utenti di prova
 lib/track.ts                     tracciamento eventi
 ```
 
 Cambia quello che vuoi: è un punto di partenza, non un vincolo.
+
+## La schermata partner: prima e dopo
+
+"Trova la tua polizza" ha due versioni, come nel prototipo del business case:
+
+- **Dopo (proposta, quella di default).** Il messaggio cambia con la risposta data in onboarding. A chi ha già una polizza non promette risparmio, perché il payout del partner vale solo per una polizza nuova. Mostra una fascia di prezzo indicativa per il ramo e l'anteprima di cosa chiederà il modulo, con il tempo che serve. Il disclaimer normativo non è più stampato sopra al bottone: resta nello stesso testo, dietro il link "Perché Finanz non consiglia una polizza". Per il ramo vita resta l'avviso sui dati di salute.
+- **Prima.** La schermata com'era: stesso pitch per tutti e disclaimer sopra al bottone.
+
+Nel pannello "Utente di prova" scegli la versione da vedere. La scelta resta salvata nel browser e finisce nella proprietà `variante` dei due eventi partner, così si possono confrontare.
+
+**Le fasce di prezzo sono un esempio del formato, non dati di mercato** (`FASCIA_PREZZO` in `lib/partner.ts`). Nella feature vera vanno calcolate come intervallo aggregato e anonimo sulle attivazioni passate per ramo.
 
 ## Pubblicare
 

@@ -9,7 +9,7 @@ import { LEZIONI, PERCORSO } from "@/lib/percorso";
 // Strumenti per chi prova il prototipo: non esistono nell'app vera.
 // Cambi utente di prova e salti avanti nel percorso senza rifare tutte le lezioni.
 export function PannelloTester({ onClose }: { onClose: () => void }) {
-  const { utente, setUtente, impostaProgresso, toast } = useUtente();
+  const { utente, setUtente, impostaProgresso, variantePartner, setVariantePartner, toast } = useUtente();
   const router = useRouter();
 
   const salta = (lezioni: number, quiz: boolean, dove: string, messaggio: string) => {
@@ -42,6 +42,27 @@ export function PannelloTester({ onClose }: { onClose: () => void }) {
           </button>
         ))}
       </div>
+      <p className="mt-5 text-xs font-semibold tracking-wide text-muted uppercase">Schermata partner</p>
+      <div className="mt-2 grid grid-cols-2 gap-2 text-sm font-semibold">
+        {(
+          [
+            ["prima", "Prima (com'era)"],
+            ["dopo", "Dopo (proposta)"],
+          ] as const
+        ).map(([v, etichetta]) => (
+          <button
+            key={v}
+            aria-pressed={variantePartner === v}
+            onClick={() => setVariantePartner(v)}
+            className={`rounded-2xl border-[1.5px] px-2 py-3 ${variantePartner === v ? "border-green-600 bg-soft" : "border-line"}`}
+          >
+            {etichetta}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-xs text-muted">
+        Le fasce di prezzo della versione &quot;Dopo&quot; sono un esempio del formato, non dati di mercato.
+      </p>
       <p className="mt-5 text-xs font-semibold tracking-wide text-muted uppercase">Scorciatoie</p>
       <div className="mt-2 grid grid-cols-3 gap-2 text-sm font-semibold">
         <button className="rounded-2xl bg-soft px-2 py-3" onClick={() => salta(0, false, "/", "Percorso azzerato")}>

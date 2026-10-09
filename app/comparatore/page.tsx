@@ -4,18 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUtente } from "@/components/Providers";
+import { campiPreventivo } from "@/lib/partner";
 import { NOME_RAMO, type Ramo } from "@/lib/utenti";
 
 // Sito del comparatore partner, simulato. Nella realtà non lo controlliamo noi:
 // "Quote Requested" e "Policy Activated" ci arrivano come postback del partner.
-
-const CAMPI: Record<Ramo, string[]> = {
-  rc_auto: ["Targa", "Data di nascita del proprietario", "Classe di merito"],
-  casa: ["CAP dell'abitazione", "Metri quadri", "Anno di costruzione"],
-  salute: ["Data di nascita", "Professione", "Preferisci rimborso o rete convenzionata?"],
-  vita: ["Data di nascita", "Fumatore?", "Capitale da assicurare (€)"],
-  dentale: ["Data di nascita", "CAP", "Componenti del nucleo"],
-};
 
 // Cosa succede dopo il preventivo, prima che la polizza parta.
 const DOPO: Partial<Record<Ramo, string>> = {
@@ -59,7 +52,7 @@ export default function Comparatore() {
           }}
         >
           <h1 className="text-2xl font-bold text-[#2b2f36]">Nuovo preventivo {NOME_RAMO[utente.ramo]}</h1>
-          {[...CAMPI[utente.ramo], "Massimale", "Franchigia", "Email"].map((campo) => (
+          {campiPreventivo(utente.ramo).map((campo) => (
             <label key={campo} className="flex flex-col gap-1 text-sm font-medium text-[#374151]">
               {campo}
               <input required className="rounded-md border border-[#d1d5db] bg-white px-3 py-2.5" />
