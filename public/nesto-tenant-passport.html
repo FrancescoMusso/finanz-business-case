@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nesto — Passaporto del Tenant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6F9;
+    --surface:#FFFFFF;
+    --ink:#0F1B2D;
+    --ink-2:#4A5568;
+    --ink-3:#8492A6;
+    --line:#E3E8EF;
+    --navy:#12263F;
+    --navy-2:#1B3A5C;
+    --accent:#1F6FEB;
+    --accent-soft:#E8F0FD;
+    --success:#1A8754;
+    --success-soft:#E6F4EC;
+    --warn:#B7791F;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(15,27,45,.04), 0 4px 16px rgba(15,27,45,.05);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+    padding:28px 16px 64px; display:flex; justify-content:center;
+  }
+  .sheet{ width:100%; max-width:460px; }
+
+  /* ---------- Brand ---------- */
+  .brand{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+  .logo{ display:flex; align-items:center; gap:9px; }
+  .logo-mark{
+    width:30px; height:30px; border-radius:8px; background:var(--navy);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .logo-mark svg{ width:17px; height:17px; }
+  .logo-text{ font-size:19px; font-weight:700; letter-spacing:-0.3px; color:var(--navy); }
+  .brand .tag{ font-size:12px; color:var(--ink-3); font-weight:500; }
+
+  /* ---------- Profile card ---------- */
+  .profile{
+    background:linear-gradient(160deg, var(--navy-2), var(--navy));
+    color:#fff; border-radius:var(--radius); padding:22px; box-shadow:var(--shadow);
+  }
+  .profile-top{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .eyebrow{ font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.6); }
+  .profile .name{ font-size:20px; font-weight:700; letter-spacing:-0.2px; margin-top:4px; }
+  .profile .meta{ font-size:12.5px; color:rgba(255,255,255,.65); margin-top:2px; }
+  .level{
+    flex-shrink:0; text-align:center; padding:8px 14px; border-radius:12px;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18);
+  }
+  .level .num{ font-size:24px; font-weight:700; line-height:1.1; }
+  .level .lbl{ font-size:10px; font-weight:600; letter-spacing:.08em; color:rgba(255,255,255,.65); }
+
+  .status-row{ margin-top:20px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .status{
+    display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;
+    padding:5px 11px; border-radius:999px; background:rgba(255,255,255,.12);
+  }
+  .status svg{ width:13px; height:13px; }
+  .streak{ font-size:12.5px; color:rgba(255,255,255,.75); }
+  .streak b{ color:#fff; font-weight:600; }
+
+  .progress{ margin-top:14px; height:6px; border-radius:3px; background:rgba(255,255,255,.14); overflow:hidden; }
+  .progress i{
+    display:block; height:100%; width:0%; border-radius:3px; background:#fff;
+    transition:width 1s cubic-bezier(.2,.8,.2,1);
+  }
+  .progress-caption{ margin-top:8px; display:flex; justify-content:space-between; font-size:12px; color:rgba(255,255,255,.65); }
+
+  /* ---------- Sections ---------- */
+  .section{ margin-top:16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px; }
+  .section-head h2{ margin:0; font-size:15px; font-weight:600; letter-spacing:-0.1px; }
+  .section-head .hint{ font-size:12px; color:var(--ink-3); }
+
+  /* ---------- Indicators ---------- */
+  .metrics{ display:flex; flex-direction:column; gap:16px; }
+  .metric .row{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; margin-bottom:7px; }
+  .metric .row .val{ font-weight:600; font-variant-numeric:tabular-nums; }
+  .bar{ height:6px; border-radius:3px; background:var(--line); overflow:hidden; }
+  .bar i{ display:block; height:100%; border-radius:3px; background:var(--accent); width:0; transition:width 1s cubic-bezier(.2,.8,.2,1); }
+
+  /* ---------- Goals ---------- */
+  .goals{ display:flex; flex-direction:column; }
+  .goal{
+    display:flex; align-items:center; gap:12px; padding:13px 0; border-top:1px solid var(--line);
+    cursor:pointer; background:none; border-left:0; border-right:0; border-bottom:0;
+    width:100%; text-align:left; font:inherit; color:inherit;
+  }
+  .goal:first-child{ border-top:0; padding-top:0; }
+  .goal:last-child{ padding-bottom:0; }
+  .check{
+    width:20px; height:20px; border-radius:50%; flex-shrink:0;
+    border:1.5px solid var(--ink-3); display:flex; align-items:center; justify-content:center;
+  }
+  .check svg{ width:11px; height:11px; opacity:0; }
+  .goal.done .check{ background:var(--success); border-color:var(--success); }
+  .goal.done .check svg{ opacity:1; }
+  .goal .body{ flex:1; min-width:0; }
+  .goal .t{ font-size:13.5px; font-weight:600; }
+  .goal .d{ font-size:12.5px; color:var(--ink-2); margin-top:1px; }
+  .goal.done .t{ color:var(--ink-3); }
+  .pts{
+    font-size:12px; font-weight:600; color:var(--accent); background:var(--accent-soft);
+    padding:3px 9px; border-radius:999px; white-space:nowrap; font-variant-numeric:tabular-nums;
+  }
+  .goal.done .pts{ color:var(--success); background:var(--success-soft); }
+
+  /* ---------- Recognitions ---------- */
+  .recs{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px 10px; }
+  .rec{ text-align:center; }
+  .rec .ico{
+    width:52px; height:52px; margin:0 auto; border-radius:14px; background:var(--accent-soft);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .rec .ico svg{ width:22px; height:22px; }
+  .rec.locked .ico{ background:transparent; border:1.5px dashed var(--line); }
+  .rec .cap{ margin-top:7px; font-size:11.5px; font-weight:500; color:var(--ink-2); line-height:1.3; }
+  .rec.locked .cap{ color:var(--ink-3); }
+
+  /* ---------- Roadmap ---------- */
+  .roadmap{ position:relative; padding-left:28px; }
+  .roadmap::before{ content:""; position:absolute; left:8px; top:6px; bottom:6px; width:2px; background:var(--line); }
+  .step{ position:relative; padding-bottom:20px; }
+  .step:last-child{ padding-bottom:0; }
+  .step::before{
+    content:""; position:absolute; left:-28px; top:2px; width:18px; height:18px; border-radius:50%;
+    background:var(--success); border:3px solid var(--surface); box-shadow:0 0 0 1.5px var(--success);
+  }
+  .step.current::before{ background:var(--accent); box-shadow:0 0 0 1.5px var(--accent), 0 0 0 6px var(--accent-soft); }
+  .step.future::before{ background:var(--surface); box-shadow:0 0 0 1.5px var(--ink-3); }
+  .step .lvl{ font-size:11.5px; font-weight:600; letter-spacing:.03em; color:var(--ink-3); }
+  .step.current .lvl{ color:var(--accent); }
+  .step .nm{ font-size:14px; font-weight:600; margin-top:1px; }
+  .step .pk{ font-size:12.5px; color:var(--ink-2); margin-top:2px; }
+
+  /* ---------- Footer ---------- */
+  .note{ margin-top:20px; padding:0 4px; font-size:12px; color:var(--ink-3); line-height:1.6; text-align:center; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="brand">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+      </div>
+      <span class="logo-text">Nesto</span>
+    </div>
+    <span class="tag">Il programma fedeltà dell'abitare</span>
+  </header>
+
+  <!-- PROFILE -->
+  <section class="profile">
+    <div class="profile-top">
+      <div>
+        <div class="eyebrow">Passaporto del Tenant</div>
+        <div class="name">Alex Bianchi</div>
+        <div class="meta">Tenant dal 2024 · Via dei Mille 12</div>
+      </div>
+      <div class="level">
+        <div class="num">27</div>
+        <div class="lbl">LIVELLO</div>
+      </div>
+    </div>
+
+    <div class="status-row">
+      <span class="status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+        Elite Tenant
+      </span>
+      <span class="streak"><b>28 mesi</b> di pagamenti puntuali</span>
+    </div>
+
+    <div class="progress"><i id="levelFill"></i></div>
+    <div class="progress-caption">
+      <span>18.420 punti</span>
+      <span>3.580 al Livello 28</span>
+    </div>
+  </section>
+
+  <!-- INDICATORS -->
+  <section class="section">
+    <div class="section-head"><h2>Indicatori di relazione</h2><span class="hint">Aggiornato oggi</span></div>
+    <div class="metrics">
+      <div class="metric"><div class="row"><span>Affidabilità finanziaria</span><span class="val">94</span></div><div class="bar"><i data-w="94"></i></div></div>
+      <div class="metric"><div class="row"><span>Cura dell'immobile</span><span class="val">91</span></div><div class="bar"><i data-w="91"></i></div></div>
+      <div class="metric"><div class="row"><span>Partecipazione alla community</span><span class="val">87</span></div><div class="bar"><i data-w="87"></i></div></div>
+      <div class="metric"><div class="row"><span>Utilizzo rete partner</span><span class="val">72</span></div><div class="bar"><i data-w="72"></i></div></div>
+      <div class="metric"><div class="row"><span>Sostenibilità</span><span class="val">83</span></div><div class="bar"><i data-w="83"></i></div></div>
+    </div>
+  </section>
+
+  <!-- GOALS -->
+  <section class="section">
+    <div class="section-head"><h2>Obiettivi in corso</h2><span class="hint">Settimana 37</span></div>
+    <div class="goals">
+      <button class="goal done" type="button">
+        <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
+        <span class="body"><div class="t">Continuità dei pagamenti</div><div class="d">Canone versato entro la scadenza</div></span>
+        <span class="pts">+500</span>
+      </button>
+      <button class="goal" type="button">
+        <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
+        <span class="body"><div class="t">Buon vicinato</div><div class="d">Nessuna segnalazione o danno nel mese</div></span>
+        <span class="pts">+100</span>
+      </button>
+      <button class="goal" type="button">
+        <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
+        <span class="body"><div class="t">Scopri il quartiere</div><div class="d">Acquisti presso 3 partner diversi</div></span>
+        <span class="pts">+300</span>
+      </button>
+      <button class="goal" type="button">
+        <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>
+        <span class="body"><div class="t">Mese impeccabile</div><div class="d">Canone puntuale e nessuna segnalazione</div></span>
+        <span class="pts">+750</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- RECOGNITIONS -->
+  <section class="section">
+    <div class="section-head"><h2>Riconoscimenti</h2><span class="hint">14 su 22</span></div>
+    <div class="recs">
+      <div class="rec"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg></div><div class="cap">Pagatore modello</div></div>
+      <div class="rec"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></svg></div><div class="cap">Zero danni</div></div>
+      <div class="rec"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></div><div class="cap">Residente di lungo corso</div></div>
+      <div class="rec locked"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div class="cap">Esploratore urbano</div></div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="section">
+    <div class="section-head"><h2>Percorso dei livelli</h2></div>
+    <div class="roadmap">
+      <div class="step">
+        <div class="lvl">LIVELLO 3 · TRUSTED TENANT</div>
+        <div class="nm">Vantaggi partner</div>
+        <div class="pk">Punti bonus e sconti dedicati nella rete di esercenti Nesto.</div>
+      </div>
+      <div class="step">
+        <div class="lvl">LIVELLO 4 · PREMIUM TENANT</div>
+        <div class="nm">Gestione semplificata</div>
+        <div class="pk">Commissione di candidatura azzerata e manutenzione prioritaria.</div>
+      </div>
+      <div class="step current">
+        <div class="lvl">LIVELLO 27 · ELITE TENANT — ATTUALE</div>
+        <div class="nm">Accesso anticipato</div>
+        <div class="pk">Anteprima dei nuovi immobili prima della pubblicazione e deposito cauzionale ridotto.</div>
+      </div>
+      <div class="step future">
+        <div class="lvl">LIVELLO 30 · LEGENDARY TENANT</div>
+        <div class="nm">Concierge e immobili riservati</div>
+        <div class="pk">Upgrade prioritari e condizioni di finanziamento dedicate.</div>
+      </div>
+    </div>
+  </section>
+
+  <p class="note">
+    Nesto non valuta il rischio: riconosce la qualità della relazione tra inquilino e abitazione attraverso livelli, continuità e vantaggi concreti.
+  </p>
+
+</div>
+
+<script>
+  window.addEventListener('load', () => {
+    requestAnimationFrame(() => {
+      document.getElementById('levelFill').style.width = '84%';
+      document.querySelectorAll('.bar i').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    });
+  });
+  document.querySelectorAll('.goal').forEach(g => {
+    g.addEventListener('click', () => g.classList.toggle('done'));
+  });
+</script>
+</body>
+</html>
